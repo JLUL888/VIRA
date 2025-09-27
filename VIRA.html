@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>VIRA</title>
+  <meta name="description" content="VIRA — Kyiv-born NYC-made for FAITH." />
+  <style>
+    :root{
+      --bg: #000000;
+      --ghost: #F8F8FF;         /* ghostwhite */
+      --ua-blue: #0057B7;       /* Ukraine blue */
+      --ua-yellow: #FFD700;     /* Ukraine yellow (gold) */
+      --radius: 16px;
+      --ring: 2px;
+    }
+
+    /* Base */
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ghost);
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Apple Color Emoji", "Segoe UI Emoji";
+      line-height: 1.4;
+      letter-spacing: 0.02em;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      scroll-behavior: smooth;
+    }
+
+    /* Subtle fixed ribbon in UA colors (zero nonsense; pure accent) */
+    .ua-ribbon {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--ua-blue) 50%, var(--ua-yellow) 50%);
+      z-index: 1000;
+      pointer-events: none;
+    }
+
+    /* Sections */
+    main { display: block; }
+    section {
+      min-height: 100svh; /* safe viewport height on mobile */
+      display: grid;
+      place-items: center;
+      padding: clamp(24px, 4vw, 56px);
+    }
+
+    /* HERO */
+    .hero {
+      text-align: center;
+      gap: 1.25rem;
+      grid-auto-rows: min-content;
+    }
+
+    .hero-figure {
+      display: inline-block;
+      border-radius: var(--radius);
+      border: 1px solid transparent;
+      background:
+        linear-gradient(var(--bg), var(--bg)) padding-box,
+        linear-gradient(135deg, var(--ua-blue), var(--ua-yellow)) border-box;
+      box-shadow:
+        0 0 0 var(--ring) rgba(255,255,255,0.04),
+        0 20px 60px rgba(0,0,0,0.6),
+        0 2px 20px rgba(255, 215, 0, 0.08);
+      overflow: hidden;
+    }
+
+    .hero-figure img {
+      display: block;
+      width: min(92vw, 1080px);
+      height: auto;
+      max-height: 70vh;
+      object-fit: contain;
+      background: #0a0a0a;
+    }
+
+    .tagline {
+      margin: 0.75rem 0 0;
+      font-size: clamp(1.1rem, 1.2rem + 0.6vw, 1.6rem);
+      font-weight: 500;
+      opacity: 0.95;
+    }
+
+    .scroll-cue {
+      margin-top: clamp(1rem, 2vh, 2rem);
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      text-decoration: none;
+      color: var(--ghost);
+      font-size: 0.95rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      opacity: 0.8;
+    }
+    .scroll-cue:after {
+      content: "↓";
+      font-size: 1.25em;
+      line-height: 1;
+      padding-left: .25rem;
+    }
+    .scroll-cue:hover { opacity: 1; }
+
+    /* CONNECT */
+    .connect {
+      text-align: center;
+    }
+
+    .connect-btn {
+      appearance: none;
+      cursor: pointer;
+      border: 2px solid transparent;
+      border-radius: 14px;
+      padding: clamp(14px, 1.4vw, 18px) clamp(20px, 3.2vw, 32px);
+      font-size: clamp(1rem, 0.9rem + 0.6vw, 1.4rem);
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      color: var(--ghost);
+      background:
+        linear-gradient(var(--bg), var(--bg)) padding-box,
+        linear-gradient(90deg, var(--ua-blue), var(--ua-yellow)) border-box;
+      transition: transform .06s ease, box-shadow .2s ease, opacity .2s ease;
+      box-shadow:
+        0 0 0 var(--ring) rgba(255,255,255,0.06),
+        0 12px 28px rgba(0,0,0,0.55),
+        0 2px 18px rgba(0, 87, 183, 0.18);
+      text-transform: uppercase;
+    }
+
+    .connect-btn:hover { transform: translateY(-1px); }
+    .connect-btn:active { transform: translateY(0); }
+    .connect-btn:focus-visible {
+      outline: none;
+      box-shadow:
+        0 0 0 3px rgba(255,255,255,0.08),
+        0 0 0 6px rgba(0, 87, 183, 0.35);
+    }
+
+    .status {
+      margin-top: 0.85rem;
+      font-size: 0.95rem;
+      opacity: 0.85;
+    }
+
+    /* Accessibility helpers */
+    .sr-only {
+      position: absolute !important;
+      height: 1px; width: 1px;
+      overflow: hidden;
+      clip: rect(1px, 1px, 1px, 1px);
+      white-space: nowrap;
+      border: 0; padding: 0; margin: -1px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .connect-btn, .scroll-cue { transition: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="ua-ribbon" aria-hidden="true"></div>
+
+  <main>
+    <!-- HERO -->
+    <section class="hero" id="top">
+      <figure class="hero-figure">
+        <img
+          src="https://imgur.com/uci7g2a.jpg"
+          alt="VIRA"
+          loading="eager"
+          decoding="async"
+          width="500"
+          height="500"
+        />
+      </figure>
+
+      <p class="tagline">Kyiv-born NYC-made for FAITH</p>
+
+      <a class="scroll-cue" href="#connect" aria-label="Scroll to wallet connect">Scroll</a>
+    </section>
+
+    <!-- CONNECT -->
+    <section class="connect" id="connect" aria-labelledby="connect-title">
+      <h2 id="connect-title" class="sr-only">Connect Wallet</h2>
+      <button id="connectBtn" class="connect-btn" type="button">Connect Wallet</button>
+      <div id="status" class="status" aria-live="polite"></div>
+      <noscript><div class="status">Enable JavaScript to connect your wallet.</div></noscript>
+    </section>
+  </main>
+
+  <script>
+    (function () {
+      const btn = document.getElementById('connectBtn');
+      const status = document.getElementById('status');
+
+      const short = (addr) => addr ? addr.slice(0, 6) + '…' + addr.slice(-4) : '';
+
+      function setConnected(address) {
+        btn.textContent = 'Connected: ' + short(address);
+        status.textContent = '';
+      }
+
+      function setDisconnected(message) {
+        btn.textContent = 'Connect Wallet';
+        status.textContent = message || '';
+      }
+
+      async function tryRestore() {
+        if (!window.ethereum) return;
+        try {
+          const accounts = await window.ethereum.request({ method: 'eth_accounts' });
+          if (accounts && accounts.length) setConnected(accounts[0]);
+        } catch (e) { /* noop */ }
+      }
+
+      async function connectWallet() {
+        if (!window.ethereum) {
+          setDisconnected('No Web3 wallet detected. Install MetaMask or a compatible EVM wallet.');
+          return;
+        }
+        try {
+          btn.disabled = true;
+          status.textContent = 'Requesting connection…';
+          const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+          const [account] = accounts || [];
+          if (account) {
+            setConnected(account);
+          } else {
+            setDisconnected('Connection was canceled.');
+          }
+        } catch (err) {
+          const msg = (err && err.message) ? err.message : 'Connection failed.';
+          setDisconnected(msg);
+        } finally {
+          btn.disabled = false;
+        }
+      }
+
+      // Events
+      btn.addEventListener('click', connectWallet);
+
+      if (window.ethereum && window.ethereum.on) {
+        window.ethereum.on('accountsChanged', (accounts) => {
+          if (accounts && accounts.length) {
+            setConnected(accounts[0]);
+          } else {
+            setDisconnected('Wallet disconnected.');
+          }
+        });
+        window.ethereum.on('chainChanged', () => {
+          // Refresh label without hard reload; many wallets advise reloading the dapp.
+          tryRestore();
+        });
+      }
+
+      // Initialize
+      tryRestore();
+    })();
+  </script>
+</body>
+</html>
