@@ -169,32 +169,32 @@
       <div class="quote-card" id="quote">
         <h2>Get Your Free Quote</h2>
         <p>Takes 60 seconds · No commitment required</p>
-        <form id="quote-form" action="https://formspree.io/f/YOURFORMID" method="POST" onsubmit="submitForm(event)">
+        <form id="quote-form" onsubmit="submitForm(event)">
           <div class="form-row">
             <div class="form-group">
               <label>First Name</label>
-              <input type="text" placeholder="John" required>
+              <input type="text" name="first_name" placeholder="John" required>
             </div>
             <div class="form-group">
               <label>Last Name</label>
-              <input type="text" placeholder="Smith" required>
+              <input type="text" name="last_name" placeholder="Smith" required>
             </div>
           </div>
           <div class="form-group">
             <label>Phone Number</label>
-            <input type="tel" placeholder="(555) 000-0000" required>
+            <input type="tel" name="phone" placeholder="(555) 000-0000" required>
           </div>
           <div class="form-group">
             <label>Email Address</label>
-            <input type="email" placeholder="john@email.com" required>
+            <input type="email" name="email" placeholder="john@email.com" required>
           </div>
           <div class="form-group">
             <label>City / ZIP Code</label>
-            <input type="text" placeholder="Tampa, FL or 33601" required>
+            <input type="text" name="location" placeholder="Tampa, FL or 33601" required>
           </div>
           <div class="form-group">
             <label>Service Needed</label>
-            <select required>
+            <select name="service" required>
               <option value="">Select a service...</option>
               <option>Popcorn ceiling removal</option>
               <option>Knockdown texture application</option>
@@ -207,10 +207,11 @@
           </div>
           <div class="form-group">
             <label>Tell us more (optional)</label>
-            <textarea placeholder="Approx. square footage, number of rooms, any special considerations..."></textarea>
+            <textarea name="details" placeholder="Approx. square footage, number of rooms, any special considerations..."></textarea>
           </div>
-          <button type="submit" class="submit-btn">Get My Free Quote →</button>
+          <button type="submit" class="submit-btn" id="submit-btn">Get My Free Quote →</button>
           <p class="form-note">We'll call or text within 24 hours. No spam, ever.</p>
+          <div id="form-error" style="display:none;color:#c00;font-size:13px;margin-top:8px;text-align:center;">Something went wrong. Please try again or email us directly.</div>
         </form>
         <div class="success-msg" id="success-msg">
           <h3>✓ Request Received!</h3>
@@ -384,18 +385,36 @@
 </footer>
 
 <script>
-function submitForm(e) {
+async function submitForm(e) {
   e.preventDefault();
-  // In production: send to a form backend (Formspree, Netlify Forms, etc.)
-  // For now, show success state
-  document.getElementById('quote-form').style.display = 'none';
-  document.getElementById('success-msg').style.display = 'block';
+  const form = document.getElementById('quote-form');
+  const btn = document.getElementById('submit-btn');
+  const errEl = document.getElementById('form-error');
 
-  // Smooth scroll to confirm they see it
-  document.getElementById('quote').scrollIntoView({ behavior: 'smooth' });
+  btn.textContent = 'Sending…';
+  btn.disabled = true;
+  errEl.style.display = 'none';
+
+  try {
+    const res = await fetch('https://formspree.io/f/xaqzljgd', {
+      method: 'POST',
+      body: new FormData(form),
+      headers: { 'Accept': 'application/json' }
+    });
+    if (res.ok) {
+      form.style.display = 'none';
+      document.getElementById('success-msg').style.display = 'block';
+      document.getElementById('quote').scrollIntoView({ behavior: 'smooth' });
+    } else {
+      throw new Error('Server error');
+    }
+  } catch {
+    btn.textContent = 'Get My Free Quote →';
+    btn.disabled = false;
+    errEl.style.display = 'block';
+  }
 }
 
-// Smooth scroll for all anchor links
 document.querySelectorAll('a[href="#quote"]').forEach(a => {
   a.addEventListener('click', e => {
     e.preventDefault();
