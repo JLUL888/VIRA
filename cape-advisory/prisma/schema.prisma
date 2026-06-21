@@ -1,0 +1,79 @@
+// Prisma schema for the Cape Cod advisory platform.
+//
+// Two record types power the platform:
+//   Lead   — a business that submitted a Business Clarity Session intake.
+//   Roadmap — the one-page operating roadmap produced after the first call.
+//
+// SQLite is used for zero-config local development. To deploy on Postgres,
+// change `provider` to "postgresql" and update DATABASE_URL.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Lead {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // --- Identity & contact ---
+  businessName String
+  ownerName    String
+  email        String
+  phone        String
+  town         String
+  links        String? // website / Instagram / Etsy / Amazon / Shopify, free text
+
+  // --- What & where ---
+  whatTheySell String
+  whereTheySell String // comma-separated channels (markets, Shopify, Etsy, ...)
+
+  // --- Scale ---
+  revenueRange String // see lib/options.ts REVENUE_RANGES
+  headcount    String // employees / contractors band
+  accountingSystem String // QuickBooks, spreadsheets, none, ...
+
+  // --- Pain & needs (self-reported) ---
+  biggestFrustration String
+
+  confidentInPricing  String // yes | somewhat | no
+  knowsProfitability  String // yes | somewhat | no
+  cashFlowStruggle    String // yes | sometimes | no
+  behindOnBooks       String // yes | a_little | no
+  needsOnlineHelp     Boolean @default(false)
+  needsTaxHelp        Boolean @default(false)
+  engagementInterest  String // one_time | monthly | unsure
+
+  // --- Internal advisor fields ---
+  status     String  @default("new") // new | contacted | scheduled | roadmap_sent | client | archived
+  advisorNotes String @default("")
+
+  roadmap Roadmap?
+
+  @@index([status])
+  @@index([createdAt])
+}
+
+model Roadmap {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  lead   Lead   @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  leadId String @unique
+
+  snapshot     String // current business snapshot (advisor narrative)
+  topIssues    String // JSON array of 3 issue strings
+  immediateWins String // JSON array
+  priorities30 String // JSON array
+  priorities90 String // JSON array
+  systemRecs   String // JSON array of recommended systems/workflow improvements
+  engagement   String // recommended engagement structure (narrative)
+  impactAreas  String // JSON array of impact categories (no $ claims)
+  preparedBy   String @default("")
+}
